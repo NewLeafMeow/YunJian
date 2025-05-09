@@ -1,2 +1,2 @@
 # -
-基于基于java spring boot
+基于java spring boot社交平台（后台）
