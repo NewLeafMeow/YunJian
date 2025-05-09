@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjian.history.mapper.SearchHistoryMapper">
+    
+    <resultMap type="SearchHistory" id="SearchHistoryResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="searchTerm"    column="search_term"    />
+        <result property="searchTime"    column="search_time"    />
+    </resultMap>
+
+    <sql id="selectSearchHistoryVo">
+        select id, user_id, search_term, search_time from search_history
+    </sql>
+
+    <select id="selectSearchHistoryList" parameterType="SearchHistory" resultMap="SearchHistoryResult">
+        <include refid="selectSearchHistoryVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="searchTerm != null  and searchTerm != ''"> and search_term like concat('%', #{searchTerm}, '%')</if>
+            <if test="searchTime != null "> and search_time = #{searchTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSearchHistoryById" parameterType="Long" resultMap="SearchHistoryResult">
+        <include refid="selectSearchHistoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSearchHistory" parameterType="SearchHistory" useGeneratedKeys="true" keyProperty="id">
+        insert into search_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="searchTerm != null and searchTerm != ''">search_term,</if>
+            <if test="searchTime != null">search_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="searchTerm != null and searchTerm != ''">#{searchTerm},</if>
+            <if test="searchTime != null">#{searchTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSearchHistory" parameterType="SearchHistory">
+        update search_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="searchTerm != null and searchTerm != ''">search_term = #{searchTerm},</if>
+            <if test="searchTime != null">search_time = #{searchTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSearchHistoryById" parameterType="Long">
+        delete from search_history where id = #{id}
+    </delete>
+
+    <delete id="deleteSearchHistoryByIds" parameterType="String">
+        delete from search_history where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjian.posts.mapper.PostsMapper">
+    
+    <resultMap type="Posts" id="PostsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="title"    column="title"    />
+        <result property="media"    column="media"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="status"    column="status"    />
+        <result property="category"    column="category"    />
+    </resultMap>
+
+    <sql id="selectPostsVo">
+        select id, user_id, title, media, created_at, updated_at, status, category from posts
+    </sql>
+
+    <select id="selectPostsList" parameterType="Posts" resultMap="PostsResult">
+        <include refid="selectPostsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="media != null  and media != ''"> and media like concat('%', #{media}, '%')</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+        </where>
+    </select>
+    
+    <select id="selectPostsById" parameterType="Long" resultMap="PostsResult">
+        <include refid="selectPostsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPosts" parameterType="Posts" useGeneratedKeys="true" keyProperty="id">
+        insert into posts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="media != null">media,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+            <if test="status != null">status,</if>
+            <if test="category != null">category,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="media != null">#{media},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+            <if test="status != null">#{status},</if>
+            <if test="category != null">#{category},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePosts" parameterType="Posts">
+        update posts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="media != null">media = #{media},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="category != null">category = #{category},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePostsById" parameterType="Long">
+        delete from posts where id = #{id}
+    </delete>
+
+    <delete id="deletePostsByIds" parameterType="String">
+        delete from posts where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

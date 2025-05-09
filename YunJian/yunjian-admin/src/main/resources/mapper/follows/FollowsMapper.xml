@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjian.follows.mapper.FollowsMapper">
+    
+    <resultMap type="Follows" id="FollowsResult">
+        <result property="followerId"    column="follower_id"    />
+        <result property="followeeId"    column="followee_id"    />
+        <result property="createdAt"    column="created_at"    />
+    </resultMap>
+
+    <sql id="selectFollowsVo">
+        select follower_id, followee_id, created_at from follows
+    </sql>
+
+    <select id="selectFollowsList" parameterType="Follows" resultMap="FollowsResult">
+        <include refid="selectFollowsVo"/>
+        <where>  
+            <if test="followerId != null "> and follower_id = #{followerId}</if>
+            <if test="followeeId != null "> and followee_id = #{followeeId}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectFollowsByFollowerId" parameterType="Long" resultMap="FollowsResult">
+        <include refid="selectFollowsVo"/>
+        where follower_id = #{followerId}
+    </select>
+
+    <insert id="insertFollows" parameterType="Follows">
+        insert into follows
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="followerId != null">follower_id,</if>
+            <if test="followeeId != null">followee_id,</if>
+            <if test="createdAt != null">created_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="followerId != null">#{followerId},</if>
+            <if test="followeeId != null">#{followeeId},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFollows" parameterType="Follows">
+        update follows
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="followeeId != null">followee_id = #{followeeId},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+        </trim>
+        where follower_id = #{followerId}
+    </update>
+
+    <delete id="deleteFollowsByFollowerId" parameterType="Long">
+        delete from follows where follower_id = #{followerId}
+    </delete>
+
+    <delete id="deleteFollowsByFollowerIds" parameterType="String">
+        delete from follows where follower_id in 
+        <foreach item="followerId" collection="array" open="(" separator="," close=")">
+            #{followerId}
+        </foreach>
+    </delete>
+</mapper>

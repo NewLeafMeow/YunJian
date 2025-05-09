@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjian.conversations.mapper.ConversationsMapper">
+    
+    <resultMap type="Conversations" id="ConversationsResult">
+        <result property="id"    column="id"    />
+        <result property="conversationName"    column="conversation_name"    />
+        <result property="isGroupChat"    column="is_group_chat"    />
+        <result property="createdAt"    column="created_at"    />
+    </resultMap>
+
+    <sql id="selectConversationsVo">
+        select id, conversation_name, is_group_chat, created_at from conversations
+    </sql>
+
+    <select id="selectConversationsList" parameterType="Conversations" resultMap="ConversationsResult">
+        <include refid="selectConversationsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="conversationName != null  and conversationName != ''"> and conversation_name like concat('%', #{conversationName}, '%')</if>
+            <if test="isGroupChat != null "> and is_group_chat = #{isGroupChat}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectConversationsById" parameterType="Long" resultMap="ConversationsResult">
+        <include refid="selectConversationsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertConversations" parameterType="Conversations" useGeneratedKeys="true" keyProperty="id">
+        insert into conversations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="conversationName != null and conversationName != ''">conversation_name,</if>
+            <if test="isGroupChat != null">is_group_chat,</if>
+            <if test="createdAt != null">created_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="conversationName != null and conversationName != ''">#{conversationName},</if>
+            <if test="isGroupChat != null">#{isGroupChat},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateConversations" parameterType="Conversations">
+        update conversations
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="conversationName != null and conversationName != ''">conversation_name = #{conversationName},</if>
+            <if test="isGroupChat != null">is_group_chat = #{isGroupChat},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConversationsById" parameterType="Long">
+        delete from conversations where id = #{id}
+    </delete>
+
+    <delete id="deleteConversationsByIds" parameterType="String">
+        delete from conversations where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

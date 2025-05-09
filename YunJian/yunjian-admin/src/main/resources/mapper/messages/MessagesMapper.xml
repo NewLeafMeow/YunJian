@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjian.messages.mapper.MessagesMapper">
+    
+    <resultMap type="Messages" id="MessagesResult">
+        <result property="id"    column="id"    />
+        <result property="conversationId"    column="conversation_id"    />
+        <result property="senderId"    column="sender_id"    />
+        <result property="messageContent"    column="message_content"    />
+        <result property="sentAt"    column="sent_at"    />
+    </resultMap>
+
+    <sql id="selectMessagesVo">
+        select id, conversation_id, sender_id, message_content, sent_at from messages
+    </sql>
+
+    <select id="selectMessagesList" parameterType="Messages" resultMap="MessagesResult">
+        <include refid="selectMessagesVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="conversationId != null "> and conversation_id = #{conversationId}</if>
+            <if test="senderId != null "> and sender_id = #{senderId}</if>
+            <if test="messageContent != null  and messageContent != ''"> and message_content like concat('%', #{messageContent}, '%')</if>
+            <if test="sentAt != null "> and sent_at = #{sentAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectMessagesById" parameterType="Long" resultMap="MessagesResult">
+        <include refid="selectMessagesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMessages" parameterType="Messages" useGeneratedKeys="true" keyProperty="id">
+        insert into messages
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="conversationId != null">conversation_id,</if>
+            <if test="senderId != null">sender_id,</if>
+            <if test="messageContent != null and messageContent != ''">message_content,</if>
+            <if test="sentAt != null">sent_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="conversationId != null">#{conversationId},</if>
+            <if test="senderId != null">#{senderId},</if>
+            <if test="messageContent != null and messageContent != ''">#{messageContent},</if>
+            <if test="sentAt != null">#{sentAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMessages" parameterType="Messages">
+        update messages
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="conversationId != null">conversation_id = #{conversationId},</if>
+            <if test="senderId != null">sender_id = #{senderId},</if>
+            <if test="messageContent != null and messageContent != ''">message_content = #{messageContent},</if>
+            <if test="sentAt != null">sent_at = #{sentAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMessagesById" parameterType="Long">
+        delete from messages where id = #{id}
+    </delete>
+
+    <delete id="deleteMessagesByIds" parameterType="String">
+        delete from messages where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

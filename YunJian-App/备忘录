@@ -1,0 +1,67 @@
+1. pageNum（当前页码）
+类型：Integer
+默认值：无（必须由前端传递）
+作用：
+指定要查询的页码，从1开始计数。
+示例：
+pageNum=2 表示查询第二页的数据。
+后端处理：
+与 pageSize 结合计算数据库查询的 OFFSET（偏移量），公式：
+OFFSET = (pageNum - 1) * pageSize
+2. pageSize（每页记录数）
+类型：Integer
+默认值：无（必须由前端传递）
+作用：
+指定每页返回的数据条数。
+示例：
+pageSize=10 表示每页显示10条数据。
+后端处理：
+直接作为 LIMIT 值传递给SQL，控制查询结果数量。
+3. orderByColumn（排序列名）
+类型：String
+默认值：无（可选参数）
+作用：
+指定按哪个字段排序，字段名为驼峰格式（与Java实体类属性名一致）。
+示例：
+orderByColumn=createdAt → 实际转换为数据库列名 created_at。
+后端处理：
+通过 SqlUtil.escapeOrderBySql() 防止SQL注入，并拼接为 ORDER BY 子句。
+4. isAsc（排序方向）
+类型：String
+默认值：asc
+作用：
+指定排序方向：
+asc：升序（从小到大）
+desc：降序（从大到小）
+兼容性：
+自动将前端参数 ascending/descending 转换为 asc/desc。
+示例：
+isAsc=desc → 生成 ORDER BY created_at DESC
+5. reasonable（分页参数合理化）
+类型：Boolean
+默认值：true
+作用：
+自动修正非法的 pageNum 值，例如：
+当 pageNum > 总页数 时，自动设置为最大页码。
+当 pageNum < 1 时，自动设置为1。
+意义：
+避免因页码越界导致查询结果为空或报错，提升用户体验。
+6. 综合示例
+前端请求
+GET /posts/list?
+  pageNum=3&
+  pageSize=20&
+  orderByColumn=userName&
+  isAsc=descending
+copy
+后端处理
+参数转换：
+orderByColumn="userName" → 转为 user_name
+isAsc="descending" → 转为 desc
+生成SQL：
+SELECT * FROM posts 
+ORDER BY user_name DESC 
+LIMIT 20 OFFSET 40  -- OFFSET = (3-1)*20 = 40
+copy
+参数合理化：
+若总页数为2（即最大页码为2），则自动将 pageNum=3 修正为 pageNum=2。

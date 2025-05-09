@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yunjian.profile.mapper.UserProfileMapper">
+    
+    <resultMap type="UserProfile" id="UserProfileResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="financeClickCount"    column="finance_click_count"    />
+        <result property="financeLikeCount"    column="finance_like_count"    />
+        <result property="politicsClickCount"    column="politics_click_count"    />
+        <result property="politicsLikeCount"    column="politics_like_count"    />
+        <result property="realEstateClickCount"    column="real_estate_click_count"    />
+        <result property="realEstateLikeCount"    column="real_estate_like_count"    />
+        <result property="homeClickCount"    column="home_click_count"    />
+        <result property="homeLikeCount"    column="home_like_count"    />
+        <result property="technologyClickCount"    column="technology_click_count"    />
+        <result property="technologyLikeCount"    column="technology_like_count"    />
+        <result property="sportsClickCount"    column="sports_click_count"    />
+        <result property="sportsLikeCount"    column="sports_like_count"    />
+        <result property="gamingClickCount"    column="gaming_click_count"    />
+        <result property="gamingLikeCount"    column="gaming_like_count"    />
+        <result property="fashionClickCount"    column="fashion_click_count"    />
+        <result property="fashionLikeCount"    column="fashion_like_count"    />
+        <result property="educationClickCount"    column="education_click_count"    />
+        <result property="educationLikeCount"    column="education_like_count"    />
+        <result property="entertainmentClickCount"    column="entertainment_click_count"    />
+        <result property="entertainmentLikeCount"    column="entertainment_like_count"    />
+        <result property="searchRecordType"    column="search_record_type"    />
+    </resultMap>
+
+    <sql id="selectUserProfileVo">
+        select id, user_id, finance_click_count, finance_like_count, politics_click_count, politics_like_count, real_estate_click_count, real_estate_like_count, home_click_count, home_like_count, technology_click_count, technology_like_count, sports_click_count, sports_like_count, gaming_click_count, gaming_like_count, fashion_click_count, fashion_like_count, education_click_count, education_like_count, entertainment_click_count, entertainment_like_count, search_record_type from user_profile
+    </sql>
+
+    <select id="selectUserProfileList" parameterType="UserProfile" resultMap="UserProfileResult">
+        <include refid="selectUserProfileVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="financeClickCount != null "> and finance_click_count = #{financeClickCount}</if>
+            <if test="financeLikeCount != null "> and finance_like_count = #{financeLikeCount}</if>
+            <if test="politicsClickCount != null "> and politics_click_count = #{politicsClickCount}</if>
+            <if test="politicsLikeCount != null "> and politics_like_count = #{politicsLikeCount}</if>
+            <if test="realEstateClickCount != null "> and real_estate_click_count = #{realEstateClickCount}</if>
+            <if test="realEstateLikeCount != null "> and real_estate_like_count = #{realEstateLikeCount}</if>
+            <if test="homeClickCount != null "> and home_click_count = #{homeClickCount}</if>
+            <if test="homeLikeCount != null "> and home_like_count = #{homeLikeCount}</if>
+            <if test="technologyClickCount != null "> and technology_click_count = #{technologyClickCount}</if>
+            <if test="technologyLikeCount != null "> and technology_like_count = #{technologyLikeCount}</if>
+            <if test="sportsClickCount != null "> and sports_click_count = #{sportsClickCount}</if>
+            <if test="sportsLikeCount != null "> and sports_like_count = #{sportsLikeCount}</if>
+            <if test="gamingClickCount != null "> and gaming_click_count = #{gamingClickCount}</if>
+            <if test="gamingLikeCount != null "> and gaming_like_count = #{gamingLikeCount}</if>
+            <if test="fashionClickCount != null "> and fashion_click_count = #{fashionClickCount}</if>
+            <if test="fashionLikeCount != null "> and fashion_like_count = #{fashionLikeCount}</if>
+            <if test="educationClickCount != null "> and education_click_count = #{educationClickCount}</if>
+            <if test="educationLikeCount != null "> and education_like_count = #{educationLikeCount}</if>
+            <if test="entertainmentClickCount != null "> and entertainment_click_count = #{entertainmentClickCount}</if>
+            <if test="entertainmentLikeCount != null "> and entertainment_like_count = #{entertainmentLikeCount}</if>
+            <if test="searchRecordType != null  and searchRecordType != ''"> and search_record_type = #{searchRecordType}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserProfileById" parameterType="Long" resultMap="UserProfileResult">
+        <include refid="selectUserProfileVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUserProfile" parameterType="UserProfile" useGeneratedKeys="true" keyProperty="id">
+        insert into user_profile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="financeClickCount != null">finance_click_count,</if>
+            <if test="financeLikeCount != null">finance_like_count,</if>
+            <if test="politicsClickCount != null">politics_click_count,</if>
+            <if test="politicsLikeCount != null">politics_like_count,</if>
+            <if test="realEstateClickCount != null">real_estate_click_count,</if>
+            <if test="realEstateLikeCount != null">real_estate_like_count,</if>
+            <if test="homeClickCount != null">home_click_count,</if>
+            <if test="homeLikeCount != null">home_like_count,</if>
+            <if test="technologyClickCount != null">technology_click_count,</if>
+            <if test="technologyLikeCount != null">technology_like_count,</if>
+            <if test="sportsClickCount != null">sports_click_count,</if>
+            <if test="sportsLikeCount != null">sports_like_count,</if>
+            <if test="gamingClickCount != null">gaming_click_count,</if>
+            <if test="gamingLikeCount != null">gaming_like_count,</if>
+            <if test="fashionClickCount != null">fashion_click_count,</if>
+            <if test="fashionLikeCount != null">fashion_like_count,</if>
+            <if test="educationClickCount != null">education_click_count,</if>
+            <if test="educationLikeCount != null">education_like_count,</if>
+            <if test="entertainmentClickCount != null">entertainment_click_count,</if>
+            <if test="entertainmentLikeCount != null">entertainment_like_count,</if>
+            <if test="searchRecordType != null">search_record_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="financeClickCount != null">#{financeClickCount},</if>
+            <if test="financeLikeCount != null">#{financeLikeCount},</if>
+            <if test="politicsClickCount != null">#{politicsClickCount},</if>
+            <if test="politicsLikeCount != null">#{politicsLikeCount},</if>
+            <if test="realEstateClickCount != null">#{realEstateClickCount},</if>
+            <if test="realEstateLikeCount != null">#{realEstateLikeCount},</if>
+            <if test="homeClickCount != null">#{homeClickCount},</if>
+            <if test="homeLikeCount != null">#{homeLikeCount},</if>
+            <if test="technologyClickCount != null">#{technologyClickCount},</if>
+            <if test="technologyLikeCount != null">#{technologyLikeCount},</if>
+            <if test="sportsClickCount != null">#{sportsClickCount},</if>
+            <if test="sportsLikeCount != null">#{sportsLikeCount},</if>
+            <if test="gamingClickCount != null">#{gamingClickCount},</if>
+            <if test="gamingLikeCount != null">#{gamingLikeCount},</if>
+            <if test="fashionClickCount != null">#{fashionClickCount},</if>
+            <if test="fashionLikeCount != null">#{fashionLikeCount},</if>
+            <if test="educationClickCount != null">#{educationClickCount},</if>
+            <if test="educationLikeCount != null">#{educationLikeCount},</if>
+            <if test="entertainmentClickCount != null">#{entertainmentClickCount},</if>
+            <if test="entertainmentLikeCount != null">#{entertainmentLikeCount},</if>
+            <if test="searchRecordType != null">#{searchRecordType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserProfile" parameterType="UserProfile">
+        update user_profile
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="financeClickCount != null">finance_click_count = #{financeClickCount},</if>
+            <if test="financeLikeCount != null">finance_like_count = #{financeLikeCount},</if>
+            <if test="politicsClickCount != null">politics_click_count = #{politicsClickCount},</if>
+            <if test="politicsLikeCount != null">politics_like_count = #{politicsLikeCount},</if>
+            <if test="realEstateClickCount != null">real_estate_click_count = #{realEstateClickCount},</if>
+            <if test="realEstateLikeCount != null">real_estate_like_count = #{realEstateLikeCount},</if>
+            <if test="homeClickCount != null">home_click_count = #{homeClickCount},</if>
+            <if test="homeLikeCount != null">home_like_count = #{homeLikeCount},</if>
+            <if test="technologyClickCount != null">technology_click_count = #{technologyClickCount},</if>
+            <if test="technologyLikeCount != null">technology_like_count = #{technologyLikeCount},</if>
+            <if test="sportsClickCount != null">sports_click_count = #{sportsClickCount},</if>
+            <if test="sportsLikeCount != null">sports_like_count = #{sportsLikeCount},</if>
+            <if test="gamingClickCount != null">gaming_click_count = #{gamingClickCount},</if>
+            <if test="gamingLikeCount != null">gaming_like_count = #{gamingLikeCount},</if>
+            <if test="fashionClickCount != null">fashion_click_count = #{fashionClickCount},</if>
+            <if test="fashionLikeCount != null">fashion_like_count = #{fashionLikeCount},</if>
+            <if test="educationClickCount != null">education_click_count = #{educationClickCount},</if>
+            <if test="educationLikeCount != null">education_like_count = #{educationLikeCount},</if>
+            <if test="entertainmentClickCount != null">entertainment_click_count = #{entertainmentClickCount},</if>
+            <if test="entertainmentLikeCount != null">entertainment_like_count = #{entertainmentLikeCount},</if>
+            <if test="searchRecordType != null">search_record_type = #{searchRecordType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserProfileById" parameterType="Long">
+        delete from user_profile where id = #{id}
+    </delete>
+
+    <delete id="deleteUserProfileByIds" parameterType="String">
+        delete from user_profile where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
